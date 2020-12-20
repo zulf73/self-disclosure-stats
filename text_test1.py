@@ -1,0 +1,148 @@
+import sys
+import json
+import string
+
+def load_emo_json( fn ):
+    with open(fn) as rf:
+        emo_json = json.load( rf)
+    return emo_json
+
+emo_dict = dict()
+with open('tws_emotions.json') as rf:
+    emo_json = json.load(rf)
+for cc in list(string.ascii_lowercase):
+    if cc not in emo_json:
+        continue
+    v = emo_json[cc]
+    for ve in v:
+        emo_dict[ve] = 1
+
+
+fn = sys.argv[1]
+fd = open( fn )
+text = fd.read()
+text = text.replace( "\n"," ")
+text = text.replace( ",","")
+text = text.replace( ".","")
+text = text.replace( "!", "")
+text = text.replace( "?", "")
+tv = text.split(" ")
+N = len(tv)
+
+categories = { "i": "self",
+               "i'm": "self",
+               "me": "self",
+               "my" : "self",
+               "you": "other",
+               "u": "other",
+               "your": "other",
+               "yourself" : "other",
+               "a" : "article",
+               "an" : "article",
+               "the" : "article",
+               "this" : "article",
+               "that" : "article",
+               "if" : "conjunction",
+               "and" : "conjunction",
+               "or" : "conjunction",
+               "for" : "adjective",
+               "but" : "conjunction",
+               "with" : "conjunction",
+               "at" : "preposition",
+               "in" : "preposition",
+               "here" : "preposition",
+               "here's": "preposition",
+               "there" : "preposition",
+               "under" : "preposition",
+               "about" : "adjective",
+               "to" : "preposition",
+               "of" : "preposition",
+               "from" : "preposition",
+               "it" : "pronoun",
+               "yes" : "assent",
+               "no" : "dissent",
+               "not" : "dissent",
+               "don't": "dissent",
+               "ok" : "assent",
+               "am" : "identity",
+               "are" : "identity",
+               "is" : "identity",
+               "think" : "THOUGHT",
+               "feel" : "FEELING"
+}
+
+d = {}
+for w in tv:
+    w=w.lower()
+    if w == "":
+        next
+    if w in categories:
+        w = categories[w]
+    if w in d:
+        d[w] = d[w]+1
+    else:
+        d[w] = 1
+
+pos_emo = load_emo_json('pos_emo.json')
+neg_emo = load_emo_json('neg_emo.json')
+low_freq_threes = []
+low_freq_twos = []
+low_freq_ones = []
+emo_words = {}
+pos_words = {}
+neg_words = {}
+
+for a in sorted(d.items(), key=lambda x: x[1], reverse=True):
+    if a[0] in emo_dict:
+        if a[0] in emo_words:
+            emo_words[ a[0] ] = emo_words[ a[0] ] + 1
+        else:
+            emo_words[ a[0] ] = 1
+
+    if a[0] in [ x.lower() for x in pos_emo.keys()]:
+        if a[0] in pos_words:
+            pos_words[ a[ 0 ] ] = pos_words[ a[0] ] + 1
+        else:
+            pos_words[ a[0] ] = 1
+
+    if a[0] in [ x.lower() for x in neg_emo.keys()]:
+        if a[0] in neg_words:
+            neg_words[ a[ 0 ] ] = neg_words[ a[0] ] + 1
+        else:
+            neg_words[ a[0] ] = 1
+
+    if a[1] == 1:
+        low_freq_ones.append(a[0])
+    elif a[1] == 2:
+        low_freq_twos.append(a[0])
+    elif a[1] == 3:
+        low_freq_threes.append(a[0])
+    else:
+        print("%s : %.4f" %(a[0],float(a[1])/float(N)))
+
+print('----------- EMOTIONS ---------')
+te = 0
+for kv in emo_words.items():
+    te = te + kv[1]
+te = 1000.0*float(te)/float(N)
+
+pe = 0
+for kv in pos_words.items():
+    pe = pe + kv[1]
+pe = 1000.0 * float(pe)/float(N)
+
+ne = 0
+for kv in neg_words.items():
+    ne = ne + kv[1]
+ne = 1000.0 * float(ne)/float(N)
+print ('emo : ', te)
+print ('pos : ', pe)
+print ('neg : ', ne)
+
+#print("Threes:")
+#print(sorted(low_freq_threes))
+#print("Twos:")
+#print(sorted(low_freq_twos))
+#print("Ones:")
+#print(sorted(low_freq_ones))
+

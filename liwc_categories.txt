@@ -1,0 +1,64 @@
+{
+"Word Count",
+"Words/Sentence",
+"Words >6 letters",
+"Total function words":
+{
+"Total Pronouns":
+{ "Personal Pronouns" }
+},
+"Articles",
+"Common Verbs",
+"Auxiliary Verbs",
+"Past Tense",
+"Future Tense",
+"Adverbs",
+"Prepositions",
+"Conjunctions",
+"Negations",
+"Quantifiers",
+"Numbers"
+}
+"Swear Words",
+"Social Processes" : {
+  "Family",
+  "Friends",
+  "Humans"
+},
+"Affective Processes" : {
+"Positive Emotion",
+"Negative Emotion": {
+  "Anxiety",
+  "Anger",
+  "Sadness"
+}
+},
+"Cognitive Processes":{
+  "Insight",
+  "Causation",
+  "Discrepancy",
+  "Tentative",
+  "Certainty",
+  "Inhibition",
+  "Inclusive",
+  "Exclusive",
+},
+"Perceptual Processes" :{
+ "See", "Hear", "Feel"
+ },
+"Biological Processes": {
+"Body", "Health", "Sexual", "Ingestion"},
+"Relativity" : {
+"Motion", "Space", "Time"},
+"Work",
+"Achievement",
+"Leisure",
+"Home",
+"Money",
+"Religion",
+"Death",
+"Assent",
+"Nonfluencies",
+"Fillers"
+}
+
